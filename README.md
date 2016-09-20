@@ -1,12 +1,14 @@
 ## freeformatter
 
+### A simple golang script that will do below:
+
     - [x] show all the MIME listings
     - [x] get a specific mime information based on the extention
     - [x] encode or decode a given string of data
     - [x] html escape a given string of data
     - [x] base64 encode or decode a given string of data
 
-### Command List:
+### Command
 
 
 ```sh
