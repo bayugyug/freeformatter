@@ -7,9 +7,10 @@ FROM debian:wheezy
 MAINTAINER bayugyug<bayugyug@gmail.com>
 
 #prepare
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-curl tar git ca-certificates apt-transport-https go \
-&& rm -rf /var/lib/apt/lists/*
+RUN add-apt-repository ppa:ubuntu-lxc/lxd-stable && \
+    apt-get update -y && apt-get install -y --no-install-recommends \
+    curl tar git ca-certificates apt-transport-https golang \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV GOHOME=/mongers
 ENV GOROOT=/usr/local/go
@@ -18,7 +19,7 @@ ENV GOSRC=$GOPATH/src
 ENV PATH=$PATH:$GOPATH/bin:/usr/local/go/bin
 
 
-RUN mkdir -p $GOSRC $GOSRC/github.com/bayugyug $GOPATH/bin && cp cleanup.sh $GOPATH/bin/
+RUN mkdir -p $GOSRC $GOSRC/github.com/bayugyug $GOPATH/bin
 
 
 RUN cd $GOSRC/github.com/bayugyug && \
@@ -33,8 +34,7 @@ RUN cd $GOSRC/github.com/bayugyug && \
 
 #executable
 RUN chmod +x $GOPATH/bin/* && \
-    $GOPATH/bin/cleanup.sh && \
     rm -fr $GOSRC
 
 #main entry
-ENTRYPOINT [ "/mongers/go/bin/freeformatter" ]
+ENTRYPOINT [ "freeformatter" ]
