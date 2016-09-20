@@ -7,8 +7,7 @@ FROM debian:wheezy
 MAINTAINER bayugyug<bayugyug@gmail.com>
 
 #prepare
-RUN add-apt-repository ppa:ubuntu-lxc/lxd-stable && \
-    apt-get update -y && apt-get install -y --no-install-recommends \
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
     curl tar git ca-certificates apt-transport-https golang \
     && rm -rf /var/lib/apt/lists/*
 
