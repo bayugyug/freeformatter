@@ -53,7 +53,7 @@ $ ./freeformatter
 
         ./freeformatter  --qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode.png","size":256}'
 
-        sudo  docker run -v $(pwd):/tmp/freeformatter-qrtmp  --rm  bayugyug/freeformatter  --qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode.png","size":256}'
+        sudo  docker run -v `pwd`:`pwd` -w `pwd` --rm  bayugyug/freeformatter  --qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode-hahaha.png","size":256}'
 
 -------------------------------------------------------
 
@@ -77,8 +77,4 @@ $ ./freeformatter
     sudo  docker run -v `pwd`:`pwd` -w `pwd` --rm  bayugyug/freeformatter  --qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode-hahaha.png","size":256}'
 
 ```
-
-
-        
-
 
