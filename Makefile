@@ -24,6 +24,9 @@ docker-wheezy: prepare
 docker-scratch: prepare
 	cd Docker && sudo docker build --no-cache --rm -t bayugyug/freeformatter:scratch -f  scratch/Dockerfile .
 
+docker-busybox: prepare
+	cd Docker && sudo docker build --no-cache --rm -t bayugyug/freeformatter:busybox -f  busybox/Dockerfile .
+
 docker-alpine: prepare
 	cd Docker && sudo docker build --no-cache --rm -t bayugyug/freeformatter:alpine  -f  alpine/Dockerfile .
 
