@@ -26,9 +26,6 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
 WORKDIR $GOPATH
 
-COPY go-wrapper /usr/local/bin/
-
-
 RUN cd $GOSRC/github.com/bayugyug && \
     git clone https://github.com/bayugyug/freeformatter.git && \
     cd $GOSRC/github.com/bayugyug/freeformatter && \
@@ -38,10 +35,9 @@ RUN cd $GOSRC/github.com/bayugyug && \
     go install github.com/bayugyug/freeformatter && \
     cd $GOSRC/github.com/bayugyug/freeformatter  && \
     cp -f Docker/cleanup.sh $GOPATH/bin/ && \
+    cp -f Docker/wheezy/go-wrapper /usr/local/bin/ && \
     chmod +x $GOPATH/bin/* && \
     $GOPATH/bin/cleanup.sh
-
-WORKDIR $GOSRC/github.com/bayugyug/freeformatter
 
 #main entry
 ENTRYPOINT [ "freeformatter" ]
