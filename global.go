@@ -68,10 +68,13 @@ var (
 	pHtmlEsc      = ""
 	pHtmlUrlEsc   = ""
 	pQRCodeGen    = ""
+
 	//ssl certs
 	pool *x509.CertPool
 
 	FormatterList map[string]Formatter
+
+	pQRCodeTmp = "/tmp/freeformater-qrtmp"
 )
 
 func init() {
@@ -105,6 +108,8 @@ func init() {
 		"QR-CODE-GEN":   {"DATA", fmtQRCode},
 	}
 
+	//qr-tmf
+	initQRTmp()
 }
 
 //initRecov is for dumpIng segv in
@@ -190,6 +195,14 @@ func initEnvParams() {
 		showUsage()
 	}
 
+}
+
+//qrTmp try to init all filehandles for logs
+func initQRTmp() {
+	if _, err := os.Stat(pQRCodeTmp); os.IsNotExist(err) {
+		//mkdir -p
+		os.MkdirAll(pQRCodeTmp, os.ModePerm)
+	}
 }
 
 //formatLogger try to init all filehandles for logs
