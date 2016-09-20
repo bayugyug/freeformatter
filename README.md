@@ -74,6 +74,7 @@ $ ./freeformatter
 
     sudo  docker run --rm  bayugyug/freeformatter --mime-list
 
+    sudo  docker run -v `pwd`:`pwd` -w `pwd` --rm  bayugyug/freeformatter  --qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode-hahaha.png","size":256}'
 
 ```
 

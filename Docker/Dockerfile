@@ -37,4 +37,4 @@ RUN $GOPATH/bin/cleanup.sh
 WORKDIR $GOSRC/github.com/bayugyug/freeformatter
 
 #main entry
-ENTRYPOINT [ "/go/bin/freeformatter", "ls -ltra  /tmp/freeformater-qrtmp" ]
+ENTRYPOINT [ "freeformatter" ]
