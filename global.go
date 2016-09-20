@@ -283,7 +283,7 @@ func showUsage() {
 	./freeformatter  --qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode.png","size":256}'
 -------------------------------------------------------
 `
-	log.Println("Version: ", pVersion, "\n")
+	fmt.Println("Version: ", pVersion, "\n")
 	flag.PrintDefaults()
 	fmt.Println(msg)
 	os.Exit(0)
