@@ -14,7 +14,4 @@ rm -rf /var/lib/{apt,dpkg,cache,log}/
 rm -rf /var/{cache,log}
 rm -fr /usr/local/go /usr/lib/go
 
-du -sh /mongers/*
-ls -ltrah /mongers/*
-
 echo "`date` - done free up"

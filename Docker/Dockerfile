@@ -35,4 +35,4 @@ RUN chmod +x $GOPATH/bin/*
 RUN $GOPATH/bin/cleanup.sh
 
 #main entry
-ENTRYPOINT [ "/go/bin/freeformatter" ]
+ENTRYPOINT [ "/go/bin/freeformatter", "ls -ltra  /tmp/freeformater-qrtmp" ]
