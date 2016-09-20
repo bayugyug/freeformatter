@@ -1,39 +1,47 @@
-#start
-#FROM golang
-#FROM google/debian:jessie
-FROM debian:wheezy
+FROM buildpack-deps:wheezy-scm
 
 #auth
 MAINTAINER bayugyug<bayugyug@gmail.com>
 
-#prepare
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    curl tar git ca-certificates apt-transport-https golang \
-    && rm -rf /var/lib/apt/lists/*
+# gcc for cgo
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		make \
+		git \
+	&& rm -rf /var/lib/apt/lists/*
 
-ENV GOHOME=/mongers
-ENV GOROOT=/usr/local/go
-ENV GOPATH=$GOHOME/go
+ENV GOLANG_VERSION 1.7.1
+ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
+ENV GOLANG_DOWNLOAD_SHA256 43ad621c9b014cde8db17393dc108378d37bc853aa351a6c74bf6432c1bbd182
+
+RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
+	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
+	&& tar -C /usr/local -xzf golang.tar.gz \
+	&& rm golang.tar.gz
+
+ENV GOPATH=/go
 ENV GOSRC=$GOPATH/src
-ENV PATH=$PATH:$GOPATH/bin:/usr/local/go/bin
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
-RUN mkdir -p $GOSRC $GOSRC/github.com/bayugyug $GOPATH/bin
+WORKDIR $GOPATH
+
+COPY go-wrapper /usr/local/bin/
 
 
 RUN cd $GOSRC/github.com/bayugyug && \
     git clone https://github.com/bayugyug/freeformatter.git && \
     cd $GOSRC/github.com/bayugyug/freeformatter && \
     go get -v && \
-    CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -tags netgo -installsuffix netgo -v -ldflags "-X main.pBuildTime=`date -u +%Y%m%d.%H%M%S`" . && \
+    go build -tags netgo -installsuffix netgo -installsuffix cgo -v -ldflags "-X main.pBuildTime=`date -u +%Y%m%d.%H%M%S`" && \
     cd $GOSRC && \
     go install github.com/bayugyug/freeformatter && \
     cd $GOSRC/github.com/bayugyug/freeformatter  && \
-    cp -f freeformatter Docker/cleanup.sh $GOPATH/bin/
+    cp -f Docker/cleanup.sh $GOPATH/bin/ && \
+    chmod +x $GOPATH/bin/* && \
+    $GOPATH/bin/cleanup.sh
 
-#executable
-RUN chmod +x $GOPATH/bin/* && \
-    rm -fr $GOSRC
+WORKDIR $GOSRC/github.com/bayugyug/freeformatter
 
 #main entry
 ENTRYPOINT [ "freeformatter" ]
