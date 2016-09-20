@@ -1,8 +1,8 @@
 FROM scratch
 
-COPY ./storemeta /storemeta
+COPY ./freeformatter /freeformatter
 
-#RUN chmod +x /storemeta
+#RUN chmod +x /freeformatter
 
-ENTRYPOINT [ "/storemeta" ]
+ENTRYPOINT [ "/freeformatter" ]
 

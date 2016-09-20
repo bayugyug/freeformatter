@@ -58,6 +58,23 @@ $ ./freeformatter
 
 
 
+## Docker Binary
+
+- [x] In order to  use it as dockerize binary
+
+
+```sh
+
+    sudo  sysctl -w net.ipv4.ip_forward=1
+
+    sudo  docker run --rm  bayugyug/freeformatter 
+
+    sudo  docker run --rm  bayugyug/freeformatter --mime-list
+
+
+```
+
+
         
 
 

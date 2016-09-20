@@ -27,13 +27,13 @@ ENV PATH $PATH:$GOPATH/bin:/usr/local/go/bin
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
 #home
-RUN mkdir -p $GOSRC/github.com/bayugyug && cd $GOSRC/github.com/bayugyug && git clone https://github.com/bayugyug/storemeta.git
+RUN mkdir -p $GOSRC/github.com/bayugyug && cd $GOSRC/github.com/bayugyug && git clone https://github.com/bayugyug/freeformatter.git
 
 #compile
-RUN cd $GOSRC/github.com/bayugyug/storemeta && go get -v && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -v -ldflags "-w -X main.pBuildTime=`date -u +%Y%m%d.%H%M%S`" .
+RUN cd $GOSRC/github.com/bayugyug/freeformatter && go get -v && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -v -ldflags "-w -X main.pBuildTime=`date -u +%Y%m%d.%H%M%S`" .
 
 #ADD
-RUN cd $GOSRC/github.com/bayugyug/storemeta && cp -f storemeta $GOBIN/
+RUN cd $GOSRC/github.com/bayugyug/freeformatter && cp -f freeformatter $GOBIN/
 
 #executable
 RUN chmod +x $GOBIN/*
@@ -50,4 +50,4 @@ RUN apk del .build-deps go git && \
 RUN du -sh /go/* /*
 
 #main entry
-ENTRYPOINT [ "/go/bin/storemeta" ]
+ENTRYPOINT [ "/go/bin/freeformatter" ]
