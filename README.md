@@ -12,8 +12,10 @@
 
 
 ```sh
+
 $ ./freeformatter
-2016/09/20 11:11:05 Version:  0.1.0-0
+
+ Version:  0.1.0-0
 
   -b64decode string
         use to base64 encode/decode a data
@@ -55,7 +57,6 @@ $ ./freeformatter
 
         ./freeformatter  --qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode.png","size":256}'
 
-        sudo  docker run -v `pwd`:`pwd` -w `pwd` --rm  bayugyug/freeformatter  --qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode-hahaha.png","size":256}'
 
 -------------------------------------------------------
 
@@ -76,7 +77,9 @@ $ ./freeformatter
 
     sudo  docker run --rm  bayugyug/freeformatter --mime-list
 
-    sudo  docker run -v `pwd`:`pwd` -w `pwd` --rm  bayugyug/freeformatter  --qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode-hahaha.png","size":256}'
+    sudo  docker run -v `pwd`:`pwd` -w `pwd` --rm  bayugyug/freeformatter         --qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode-hahaha.png","size":256}'
+
+    sudo  docker run -v `pwd`:`pwd` -w `pwd` --rm  bayugyug/freeformatter:alpine  --qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode-hahaha.png","size":256}'
 
 ```
 
