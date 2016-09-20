@@ -109,7 +109,7 @@ func init() {
 	}
 
 	//qr-tmf
-	initQRTmp()
+	//initQRTmp()
 }
 
 //initRecov is for dumpIng segv in

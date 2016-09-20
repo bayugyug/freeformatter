@@ -13,7 +13,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"path"
+	//"path"
 	"strings"
 	"time"
 )
@@ -238,7 +238,7 @@ func fmtQRCode(mode, data string) {
 	if f == "" {
 		f = "qrcode.png"
 	}
-	dst := path.Join(pQRCodeTmp, f)
+	dst := f //path.Join(pQRCodeTmp, f)
 	//gen
 	err = qrcode.WriteFile(d, qrcode.Medium, s, dst)
 	if err != nil {
