@@ -1,4 +1,4 @@
-FROM buildpack-deps:wheezy-scm
+FROM google/debian:wheezy
 
 #auth
 MAINTAINER bayugyug<bayugyug@gmail.com>

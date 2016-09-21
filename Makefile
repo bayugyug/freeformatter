@@ -19,7 +19,7 @@ docker-devel : prepare
 	cd Docker && sudo docker build --no-cache --rm -t bayugyug/freeformatter .
 
 docker-wheezy: prepare
-	cd Docker && sudo docker build --no-cache --rm -t bayugyug/freeformatter -f  wheezy/Dockerfile .
+	cd Docker && sudo docker build --no-cache --rm -t bayugyug/freeformatter  -f  wheezy/Dockerfile .
 
 docker-scratch: prepare
 	cd Docker && sudo docker build --no-cache --rm -t bayugyug/freeformatter:scratch -f  scratch/Dockerfile .
