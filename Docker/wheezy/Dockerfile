@@ -5,7 +5,7 @@ MAINTAINER bayugyug<bayugyug@gmail.com>
 
 # gcc for cgo
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		make \
+		make tar curl \
 		git \
 	&& rm -rf /var/lib/apt/lists/*
 
