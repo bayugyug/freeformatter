@@ -83,3 +83,19 @@ $ ./freeformatter
 
 ```
 
+
+## As HTTP Server
+
+- [x] In order to  use it via CURL/WGET or Browser
+
+
+```sh
+
+    sudo  sysctl -w net.ipv4.ip_forward=1
+
+    sudo  docker run -p 7777:7777 -v `pwd`:`pwd` -w `pwd` -d --name freeformatter-alpine  bayugyug/freeformatter:alpine --http
+
+    curl -i -v 'http://192.168.2.121:7777/mime-type/?p=.mp4'
+
+```
+
