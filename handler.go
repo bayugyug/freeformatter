@@ -246,37 +246,31 @@ func fmtHtmlUnEsc(mode, data string) (string, string) {
 func fmtQRCode(mode, data string) (string, string) {
 
 	//-qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode.png","size":256}'
-	type QRCodeData struct {
-		Data     string `json:"data,ommitempty`
-		Filename string `json:"filename,ommitempty`
-		Size     int    `json:"size,ommitempty`
-	}
-	var qrparams QRCodeData
-	err := json.Unmarshal([]byte(data), &qrparams)
+	err := json.Unmarshal([]byte(data), &pQRParams)
 
 	//sanity
 	if err != nil {
 		return "Fail", fmt.Sprintf("QR error: Invalid parameters! %v", err)
 	}
 	//sanity
-	if qrparams.Data == "" {
+	if pQRParams.Data == "" {
 		return "Fail", "QR error: data is empty!"
 	}
 	var d, f string
 	var s int
 
 	//default
-	s = qrparams.Size
-	if qrparams.Size < 50 || qrparams.Size > 512 {
+	s = pQRParams.Size
+	if pQRParams.Size < 50 || pQRParams.Size > 512 {
 		s = 128
 	}
 	//default
-	d = strings.TrimSpace(qrparams.Data)
+	d = strings.TrimSpace(pQRParams.Data)
 	if len(d) > 4196 {
 		d = d[:4196]
 	}
 	//default
-	f = strings.TrimSpace(qrparams.Filename)
+	f = strings.TrimSpace(pQRParams.Filename)
 	if f == "" {
 		f = "qrcode.png"
 	}

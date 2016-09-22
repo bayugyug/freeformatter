@@ -24,6 +24,7 @@ const (
 	usageHtmlFormat   = "use to escape/unescape an HTML"
 	usageQRCode       = "use to generate a PNG QR Code"
 	usageHttp         = "use to serve the results via HTTP"
+	usageHttpPort     = "use to serve the results via HTTP @ Port No."
 )
 
 type Formatter struct {
@@ -34,6 +35,12 @@ type Formatter struct {
 type FormatterOutput struct {
 	Result string `json:"result,ommitempty`
 	Status string `json:"status,ommitempty`
+}
+
+type QRCodeData struct {
+	Data     string `json:"data,ommitempty`
+	Filename string `json:"filename,ommitempty`
+	Size     int    `json:"size,ommitempty`
 }
 
 var (
@@ -80,7 +87,8 @@ var (
 
 	pQRCodeTmp = "/tmp/freeformater-qrtmp"
 
-	pHttpPort = ":7777"
+	pHttpPort = "7777"
+	pQRParams QRCodeData
 )
 
 func init() {
@@ -127,7 +135,7 @@ func initHttpRouters() {
 	pRouter.GET("/:mode/", formatHandler)
 	pRouter.POST("/:mode/", formatHandler)
 	fmt.Println("Freeformatter\n\nVer: "+pVersion+"\n\nReady to serve @ port:", strings.Replace(pHttpPort, ":", "", -1))
-	log.Fatal(http.ListenAndServe(pHttpPort, pRouter))
+	log.Fatal(http.ListenAndServe(":"+pHttpPort, pRouter))
 }
 
 //initRecov is for dumpIng segv in
@@ -191,6 +199,8 @@ func initEnvParams() {
 	flag.StringVar(&pQRCodeGen, "qr-code-gen", pQRCodeGen, usageQRCode)
 
 	flag.BoolVar(&pHttpServe, "http", pHttpServe, usageHttp)
+
+	flag.StringVar(&pHttpPort, "port", pHttpPort, usageHttpPort)
 	flag.Parse()
 
 	//either 1 should be present
