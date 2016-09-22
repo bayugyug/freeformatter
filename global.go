@@ -4,9 +4,11 @@ import (
 	"crypto/x509"
 	"flag"
 	"fmt"
+	"github.com/julienschmidt/httprouter"
 	"io"
 	"log"
 	"math/rand"
+	"net/http"
 	"os"
 	"path"
 	"regexp"
@@ -21,11 +23,12 @@ const (
 	usageBase64Format = "use to base64 encode/decode a data"
 	usageHtmlFormat   = "use to escape/unescape an HTML"
 	usageQRCode       = "use to generate a PNG QR Code"
+	usageHttp         = "use to serve the results via HTTP"
 )
 
 type Formatter struct {
 	Mode   string
-	Format func(mode string, data string)
+	Format func(mode string, data string) (string, string)
 }
 
 type FormatterOutput struct {
@@ -68,13 +71,16 @@ var (
 	pHtmlEsc      = ""
 	pHtmlUrlEsc   = ""
 	pQRCodeGen    = ""
+	pHttpServe    = false
 
 	//ssl certs
 	pool *x509.CertPool
 
-	FormatterList map[string]Formatter
+	Formatters map[string]Formatter
 
 	pQRCodeTmp = "/tmp/freeformater-qrtmp"
+
+	pHttpPort = ":7777"
 )
 
 func init() {
@@ -92,7 +98,7 @@ func init() {
 	pool.AppendCertsFromPEM(pemCerts)
 
 	//in
-	FormatterList = map[string]Formatter{
+	Formatters = map[string]Formatter{
 		"MIME-TYPE":     {"TYPE", fmtMime},
 		"MIME-LIST":     {"LIST", fmtMime},
 		"ENC-DATA":      {"DATA", fmtEnc},
@@ -110,6 +116,18 @@ func init() {
 
 	//qr-tmf
 	//initQRTmp()
+}
+
+//initHttpRouters, init the routing
+func initHttpRouters() {
+	pRouter := httprouter.New()
+	pRouter.GET("/", indexHandler)
+	pRouter.GET("/:mode", formatHandler)
+	pRouter.POST("/:mode", formatHandler)
+	pRouter.GET("/:mode/", formatHandler)
+	pRouter.POST("/:mode/", formatHandler)
+	fmt.Println("Freeformatter\n\nVer: "+pVersion+"\n\nReady to serve @ port:", strings.Replace(pHttpPort, ":", "", -1))
+	log.Fatal(http.ListenAndServe(pHttpPort, pRouter))
 }
 
 //initRecov is for dumpIng segv in
@@ -171,6 +189,8 @@ func initEnvParams() {
 	flag.StringVar(&pHtmlUrlEsc, "html-esc-url", pHtmlUrlEsc, usageHtmlFormat)
 
 	flag.StringVar(&pQRCodeGen, "qr-code-gen", pQRCodeGen, usageQRCode)
+
+	flag.BoolVar(&pHttpServe, "http", pHttpServe, usageHttp)
 	flag.Parse()
 
 	//either 1 should be present
@@ -191,6 +211,7 @@ func initEnvParams() {
 		pBase64UrlDec == "" &&
 		pHtmlEsc == "" &&
 		pHtmlUrlEsc == "" &&
+		!pHttpServe &&
 		pQRCodeGen == "" {
 		showUsage()
 	}
@@ -281,6 +302,7 @@ func showUsage() {
 	./freeformatter  --mime-list
 
 	./freeformatter  --qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode.png","size":256}'
+
 -------------------------------------------------------
 `
 	fmt.Println("Version: ", pVersion, "\n")

@@ -20,7 +20,7 @@ RUN mkdir -p $GOPATH/bin  $GOSRC/github.com/bayugyug
 RUN cd $GOSRC/github.com/bayugyug && git clone https://github.com/bayugyug/freeformatter.git
 
 #compile
-RUN cd $GOSRC/github.com/bayugyug/freeformatter && go get -v && go build -tags netgo -installsuffix netgo -installsuffix cgo -v -ldflags "-X main.pBuildTime=`date -u +%Y%m%d.%H%M%S`"
+RUN cd $GOSRC/github.com/bayugyug/freeformatter && go get -v && go build -tags netgo -installsuffix netgo -installsuffix cgo -v -ldflags "-s -w -X main.pBuildTime=`date -u +%Y%m%d.%H%M%S`"
 
 #install
 RUN cd $GOSRC && go install github.com/bayugyug/freeformatter

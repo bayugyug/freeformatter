@@ -25,83 +25,108 @@ func handler() {
 
 	//get mime type
 	if pMimeType != "" {
-		v := FormatterList["MIME-TYPE"]
-		v.Format(v.Mode, pMimeType)
+		v := Formatters["MIME-TYPE"]
+		_, resmsg := v.Format(v.Mode, pMimeType)
+		fmt.Println(resmsg)
 		return
 	}
 	//get mime list
 	if pMimeList {
-		v := FormatterList["MIME-LIST"]
-		v.Format(v.Mode, pMimeType)
+		v := Formatters["MIME-LIST"]
+		rescode, resmsg := v.Format(v.Mode, pMimeType)
+		showStatus(rescode, resmsg)
 		return
 	}
 	//encode
 	if pEncData != "" {
-		v := FormatterList["ENC-DATA"]
-		v.Format(v.Mode, pEncData)
+		v := Formatters["ENC-DATA"]
+		rescode, resmsg := v.Format(v.Mode, pEncData)
+		showStatus(rescode, resmsg)
 		return
 	}
 	//encode-url
 	if pEncUrl != "" {
-		v := FormatterList["ENC-URL"]
-		v.Format(v.Mode, pEncUrl)
+		v := Formatters["ENC-URL"]
+		rescode, resmsg := v.Format(v.Mode, pEncUrl)
+		showStatus(rescode, resmsg)
 		return
 	}
 	//decode
 	if pDecData != "" {
-		v := FormatterList["DEC-DATA"]
-		v.Format(v.Mode, pDecData)
+		v := Formatters["DEC-DATA"]
+		rescode, resmsg := v.Format(v.Mode, pDecData)
+		showStatus(rescode, resmsg)
 		return
 	}
 	//decode-url
 	if pDecUrl != "" {
-		v := FormatterList["DEC-URL"]
-		v.Format(v.Mode, pDecUrl)
+		v := Formatters["DEC-URL"]
+		rescode, resmsg := v.Format(v.Mode, pDecUrl)
+		showStatus(rescode, resmsg)
 		return
 	}
 	//encode:b64
 	if pBase64Enc != "" {
-		v := FormatterList["B64-ENC-DATA"]
-		v.Format(v.Mode, pBase64Enc)
+		v := Formatters["B64-ENC-DATA"]
+		rescode, resmsg := v.Format(v.Mode, pBase64Enc)
+		showStatus(rescode, resmsg)
 		return
 	}
 	//encode-url:b64
 	if pBase64UrlEnc != "" {
-		v := FormatterList["B64-ENC-URL"]
-		v.Format(v.Mode, pBase64UrlEnc)
+		v := Formatters["B64-ENC-URL"]
+		rescode, resmsg := v.Format(v.Mode, pBase64UrlEnc)
+		showStatus(rescode, resmsg)
 		return
 	}
 	//decode:b64
 	if pBase64Dec != "" {
-		v := FormatterList["B64-DEC-DATA"]
-		v.Format(v.Mode, pBase64Dec)
+		v := Formatters["B64-DEC-DATA"]
+		rescode, resmsg := v.Format(v.Mode, pBase64Dec)
+		showStatus(rescode, resmsg)
 		return
 	}
 	//decode-url:b64
 	if pBase64UrlDec != "" {
-		v := FormatterList["B64-DEC-URL"]
-		v.Format(v.Mode, pBase64UrlDec)
+		v := Formatters["B64-DEC-URL"]
+		rescode, resmsg := v.Format(v.Mode, pBase64UrlDec)
+		showStatus(rescode, resmsg)
 		return
 	}
 	//html-esc
 	if pHtmlEsc != "" {
-		v := FormatterList["HTML-ENC-DATA"]
-		v.Format(v.Mode, pHtmlEsc)
+		v := Formatters["HTML-ENC-DATA"]
+		rescode, resmsg := v.Format(v.Mode, pHtmlEsc)
+		showStatus(rescode, resmsg)
 		return
 	}
 	//html-esc-url
 	if pHtmlUrlEsc != "" {
-		v := FormatterList["HTML-ENC-URL"]
-		v.Format(v.Mode, pHtmlUrlEsc)
+		v := Formatters["HTML-ENC-URL"]
+		rescode, resmsg := v.Format(v.Mode, pHtmlUrlEsc)
+		if !pHttpServe {
+			showStatus(rescode, resmsg)
+			return
+		}
 		return
 	}
 
 	//qrcode
 	if pQRCodeGen != "" {
-		v := FormatterList["QR-CODE-GEN"]
-		v.Format(v.Mode, pQRCodeGen)
+		v := Formatters["QR-CODE-GEN"]
+		rescode, resmsg := v.Format(v.Mode, pQRCodeGen)
+		if !pHttpServe {
+			showStatus(rescode, resmsg)
+			return
+		}
 		return
 	}
+	//serve http
+	if pHttpServe {
+		initHttpRouters()
+		return
+	}
+
 }
 
 func getMimes() []MIMETypes {
@@ -113,93 +138,112 @@ func getMimes() []MIMETypes {
 	return mimes
 }
 
-func fmtMime(mode, data string) {
+func fmtMime(mode, data string) (string, string) {
 	mimelist := getMimes()
+	var jdata []byte
 	if strings.EqualFold(mode, "TYPE") {
 		//type
 		for _, v := range mimelist {
 			if strings.EqualFold(v.Ext, data) {
-				jdata, _ := json.MarshalIndent(v, "", "\t")
-				fmt.Println(string(jdata))
+				jdata, _ = json.MarshalIndent(v, "", "\t")
 				break
 			}
 		}
 	} else {
 		//list
-		jdata, _ := json.MarshalIndent(mimelist, "", "\t")
-		fmt.Println(string(jdata))
+		jdata, _ = json.MarshalIndent(mimelist, "", "\t")
 	}
+	return "", string(jdata)
 }
 
-func fmtEnc(mode, data string) {
+func fmtEnc(mode, data string) (string, string) {
 	var s string
 	if strings.EqualFold(mode, "URL") {
+		if !strings.HasPrefix(data, "http") {
+			return "Fail", "Invalid url parameter: " + data
+		}
 		_, s = getResult(data)
 	} else {
 		s = data
 	}
-	showStatus("", url.QueryEscape(s))
+	return "", url.QueryEscape(s)
 }
 
-func fmtDec(mode, data string) {
+func fmtDec(mode, data string) (string, string) {
 	var s string
 	if strings.EqualFold(mode, "URL") {
+		if !strings.HasPrefix(data, "http") {
+			return "Fail", "Invalid url parameter: " + data
+		}
+
 		_, s = getResult(data)
 	} else {
 		s = data
 	}
 	enc, _ := url.QueryUnescape(s)
-	showStatus("", enc)
+	return "", enc
 }
 
-func fmtEncB64(mode, data string) {
+func fmtEncB64(mode, data string) (string, string) {
 	var s string
 	if strings.EqualFold(mode, "URL") {
+		if !strings.HasPrefix(data, "http") {
+			return "Fail", "Invalid url parameter: " + data
+		}
 		_, s = getResult(data)
 	} else {
 		s = data
 	}
 	enc := base64.StdEncoding.EncodeToString([]byte(s))
-	showStatus("", enc)
+	return "", enc
 }
 
-func fmtDecB64(mode, data string) {
+func fmtDecB64(mode, data string) (string, string) {
 	var s string
 
 	if strings.EqualFold(mode, "URL") {
+		if !strings.HasPrefix(data, "http") {
+			return "Fail", "Invalid url parameter: " + data
+		}
 		_, s = getResult(data)
 	} else {
 		s = data
 	}
 	decoded, err := base64.StdEncoding.DecodeString(s)
 	if err != nil {
-		showStatus("Fail", fmt.Sprintf("Decode error: %v", err))
-		return
+		return "Fail", fmt.Sprintf("Decode error: %v", err)
 	}
-	showStatus("", string(decoded))
+	return "", string(decoded)
 }
 
-func fmtHtmlEsc(mode, data string) {
+func fmtHtmlEsc(mode, data string) (string, string) {
 	var s string
 	if strings.EqualFold(mode, "URL") {
+		if !strings.HasPrefix(data, "http") {
+			return "Fail", "Invalid url parameter: " + data
+		}
 		_, s = getResult(data)
 	} else {
 		s = data
 	}
-	showStatus("", html.EscapeString(s))
+	return "", html.EscapeString(s)
 }
 
-func fmtHtmlUnEsc(mode, data string) {
+func fmtHtmlUnEsc(mode, data string) (string, string) {
 	var s string
 	if strings.EqualFold(mode, "URL") {
+		if !strings.HasPrefix(data, "http") {
+			return "Fail", "Invalid url parameter: " + data
+		}
+
 		_, s = getResult(data)
 	} else {
 		s = data
 	}
-	showStatus("", html.UnescapeString(s))
+	return "", html.UnescapeString(s)
 }
 
-func fmtQRCode(mode, data string) {
+func fmtQRCode(mode, data string) (string, string) {
 
 	//-qr-code-gen='{"data": "https://www.google.com.sg/","filename":"qrcode.png","size":256}'
 	type QRCodeData struct {
@@ -212,13 +256,11 @@ func fmtQRCode(mode, data string) {
 
 	//sanity
 	if err != nil {
-		showStatus("Fail", fmt.Sprintf("QR error: Invalid parameters! %v", err))
-		return
+		return "Fail", fmt.Sprintf("QR error: Invalid parameters! %v", err)
 	}
 	//sanity
 	if qrparams.Data == "" {
-		showStatus("Fail", "QR error: data is empty!")
-		return
+		return "Fail", "QR error: data is empty!"
 	}
 	var d, f string
 	var s int
@@ -242,10 +284,9 @@ func fmtQRCode(mode, data string) {
 	//gen
 	err = qrcode.WriteFile(d, qrcode.Medium, s, dst)
 	if err != nil {
-		showStatus("Fail", fmt.Sprintf("QR error: failed to generate code! %v", err))
-		return
+		return "Fail", fmt.Sprintf("QR error: failed to generate code! %v", err)
 	}
-	showStatus("", dst)
+	return "", dst
 }
 
 func showStatus(status, result string) {

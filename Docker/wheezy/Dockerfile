@@ -5,7 +5,7 @@ MAINTAINER bayugyug<bayugyug@gmail.com>
 
 # gcc for cgo
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		make tar curl libc6-dev gcc \
+		make curl \
 		git \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -30,7 +30,7 @@ RUN cd $GOSRC/github.com/bayugyug && \
     git clone https://github.com/bayugyug/freeformatter.git && \
     cd $GOSRC/github.com/bayugyug/freeformatter && \
     go get -v && \
-    go build -tags netgo -installsuffix netgo -installsuffix cgo -v -ldflags "-X main.pBuildTime=`date -u +%Y%m%d.%H%M%S`" && \
+    go build -tags netgo -installsuffix netgo -installsuffix cgo -v -ldflags "-s -w -X main.pBuildTime=`date -u +%Y%m%d.%H%M%S`" && \
     cd $GOSRC && \
     go install github.com/bayugyug/freeformatter && \
     cd $GOSRC/github.com/bayugyug/freeformatter  && \
