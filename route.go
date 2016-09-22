@@ -45,8 +45,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 func formatHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	//Content-Type: application/json
-	var q = r.URL.Query()
-	var p = strings.TrimSpace(q.Get("p"))
+	var p = strings.TrimSpace(r.URL.Query().Get("p"))
 	var m = strings.ToUpper(strings.TrimSpace(ps.ByName("mode")))
 
 	//not-found
