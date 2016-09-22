@@ -93,9 +93,9 @@ $ ./freeformatter
 
     sudo  sysctl -w net.ipv4.ip_forward=1
 
-    sudo  docker run -p 7777:7777 -v `pwd`:`pwd` -w `pwd` -d --name freeformatter-alpine  bayugyug/freeformatter:alpine --http
+    sudo  docker run -p 7000-8000:7000-8000 -v `pwd`:`pwd` -w `pwd` -d --name freeformatter-alpine  bayugyug/freeformatter:alpine --http --port 7778
 
-    curl -i -v 'http://192.168.2.121:7777/mime-type/?p=.mp4'
+    curl -i -v 'http://192.168.2.121:7778/mime-type/?p=.mp4'
 
 ```
 
