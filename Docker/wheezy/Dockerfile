@@ -39,5 +39,7 @@ RUN cd $GOSRC/github.com/bayugyug && \
     chmod +x $GOPATH/bin/* && \
     $GOPATH/bin/cleanup.sh
 
+EXPOSE 7777
+
 #main entry
 ENTRYPOINT [ "freeformatter" ]

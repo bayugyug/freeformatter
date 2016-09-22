@@ -36,5 +36,7 @@ RUN $GOPATH/bin/cleanup.sh
 
 WORKDIR $GOSRC/github.com/bayugyug/freeformatter
 
+EXPOSE 7777
+
 #main entry
 ENTRYPOINT [ "freeformatter" ]

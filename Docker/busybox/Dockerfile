@@ -19,5 +19,7 @@ RUN mkdir -p $GOPATH/bin  $GOSRC/github.com/bayugyug
 
 COPY ./freeformatter /freeformatter
 
+EXPOSE 7777
+
 ENTRYPOINT [ "/freeformatter" ]
 

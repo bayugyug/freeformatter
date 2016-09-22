@@ -49,5 +49,7 @@ RUN apk del .build-deps go git gcc musl-dev && \
 #cleanup
 RUN du -sh /go/* /*
 
+EXPOSE 7777
+
 #main entry
 ENTRYPOINT [ "/go/bin/freeformatter" ]
