@@ -99,3 +99,6 @@ $ ./freeformatter
 
 ```
 
+### License
+
+[MIT](http://xlab.mit-license.org)
