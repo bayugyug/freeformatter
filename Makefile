@@ -30,6 +30,9 @@ docker-busybox: prepare
 docker-alpine: prepare
 	cd Docker && sudo docker build --no-cache --rm -t bayugyug/freeformatter:alpine  -f  alpine/Dockerfile .
 
+docker-debian: prepare
+	cd Docker && sudo docker build --no-cache --rm -t bayugyug/freeformatter:debian -f  debian/Dockerfile .
+
 clean:
 	rm -f freeformatter Docker/freeformatter
 	rm -f benchmarks.xml coverage.xml vet.txt lint.txt
