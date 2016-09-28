@@ -101,4 +101,4 @@ $ ./freeformatter
 
 ### License
 
-[MIT](http://xlab.mit-license.org)
+[MIT](https://bayugyug.mit-license.org/)
