@@ -5,18 +5,16 @@ FROM alpine:3.4
 #auth
 MAINTAINER bayugyug<bayugyug@gmail.com>
 
-RUN apk add --no-cache ca-certificates
-
-RUN set -ex \
-    && apk add --no-cache --virtual .build-deps \
+RUN apk add --no-cache ca-certificates && \
+        set -ex \
+        && apk add --no-cache --virtual .build-deps \
         bash \
         git \
         gcc \
         musl-dev \
         openssl \
-        go
-
-RUN apk add --update ca-certificates # Certificates for SSL
+        go && \
+        apk add --update ca-certificates # Certificates for SSL
 
 ENV GOPATH /go
 ENV GOSRC $GOPATH/src
@@ -34,15 +32,12 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && \
     cd $GOSRC/github.com/bayugyug/freeformatter && \
     cp -f freeformatter $GOBIN/ && \
     chmod +x $GOBIN/* && \
-    du -sh /go/* /* && ls -ltrha $GOBIN/*
-
-RUN apk del .build-deps go git gcc musl-dev && \
+    du -sh /go/* /* && ls -ltrha $GOBIN/* && \
+    apk del .build-deps go git gcc musl-dev && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ &&  \
     rm -rf /var/{cache,log} && \
-    rm -fr /go/pkg  /go/src
-
-#cleanup
-RUN du -sh /go/* /*
+    rm -fr /go/pkg  /go/src && \
+    du -sh /go/* /*
 
 
 #main entry
