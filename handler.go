@@ -6,13 +6,14 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	qrcode "github.com/skip2/go-qrcode"
 	"html"
 	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
 	"net/url"
+
+	qrcode "github.com/skip2/go-qrcode"
 	//"path"
 	"strings"
 	"time"
@@ -33,8 +34,8 @@ func handler() {
 	//get mime list
 	if pMimeList {
 		v := Formatters["MIME-LIST"]
-		rescode, resmsg := v.Format(v.Mode, pMimeType)
-		showStatus(rescode, resmsg)
+		_, resmsg := v.Format(v.Mode, pMimeType)
+		fmt.Println(resmsg)
 		return
 	}
 	//encode
@@ -152,6 +153,7 @@ func fmtMime(mode, data string) (string, string) {
 	} else {
 		//list
 		jdata, _ = json.MarshalIndent(mimelist, "", "\t")
+		return "", string(jsonStr)
 	}
 	return "", string(jdata)
 }
